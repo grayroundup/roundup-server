@@ -52,6 +52,34 @@ function checkRateLimit(req) {
 // health check
 app.get("/health", (req, res) => res.json({ ok: true }));
 
+app.get("/every/success", (req, res) => {
+  const id = String(req.query.partner_donation_id || "");
+  res.setHeader("Content-Type", "text/html; charset=utf-8");
+  res.send(`<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Donation complete</title>
+    <style>
+      body { font-family: Arial, sans-serif; padding: 24px; color: #111; }
+      .card { max-width: 560px; margin: 0 auto; border: 1px solid rgba(0,0,0,0.12); border-radius: 14px; padding: 18px; }
+      h1 { font-size: 20px; margin: 0 0 10px; }
+      p { margin: 8px 0; color: #444; }
+      code { background: #f3f3f3; padding: 2px 6px; border-radius: 6px; }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1>Donation complete</h1>
+      <p>Thanks, you can close this tab.</p>
+      <p style="font-size:12px;">Reference: <code>${id.replace(/</g, "&lt;")}</code></p>
+      <p style="font-size:12px;">If you have the Give a Penny extension installed, it will handle your next step automatically.</p>
+    </div>
+  </body>
+</html>`);
+});
+
 // receive generic tracking events (install, prompt_shown, skipped, etc.)
 app.post("/events/track", async (req, res) => {
   try {
